@@ -1,5 +1,5 @@
 {
-    "name": "Synga/InteractiveConsoleTester",
+    "name": "synga/interactive-console-tester",
     "type": "library",
     "description": "Framework to test interactive console applications.",
     "keywords": [
