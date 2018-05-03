@@ -1,18 +1,21 @@
 {
     "name": "Synga/InteractiveConsoleTester",
     "type": "library",
-    "description": ":package_description",
+    "description": "Framework to test interactive console applications.",
     "keywords": [
         "Synga",
-        "InteractiveConsoleTester"
+        "InteractiveConsoleTester",
+        "interactive",
+        "console",
+        "test",
+        "tester"
     ],
     "homepage": "https://github.com/Synga/InteractiveConsoleTester",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": ":author_email",
-            "homepage": ":author_website",
+            "name": "Roy Poulse",
+            "email": "info@synga.nl",
             "role": "Developer"
         }
     ],
@@ -44,8 +47,5 @@
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
-    },
-    "config": {
-        "sort-packages": true
     }
 }
