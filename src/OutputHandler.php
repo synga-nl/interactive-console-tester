@@ -2,7 +2,7 @@
 
 namespace Synga\InteractiveConsoleTester\Test;
 
-use Synga\InteractiveConsoleTester\Test\FlowTest;
+use Synga\InteractiveConsoleTester\FlowTest;
 
 /**
  * Class OutputHandler

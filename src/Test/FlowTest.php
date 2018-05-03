@@ -1,6 +1,6 @@
 <?php
 
-namespace Synga\InteractiveConsoleTester\Test;
+namespace Synga\InteractiveConsoleTester;
 
 use Synga\InteractiveConsoleTester\Process\Process;
 use Synga\InteractiveConsoleTester\Test\InputTest;
