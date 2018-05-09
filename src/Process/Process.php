@@ -24,4 +24,6 @@ interface Process
     public function getTimeout(): int;
 
     public function getBuffer(): array;
+
+    public function getCommand(): string;
 }

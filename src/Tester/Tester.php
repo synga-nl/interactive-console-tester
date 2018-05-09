@@ -1,9 +1,10 @@
 <?php
 
-namespace Synga\InteractiveConsoleTester;
+namespace Synga\InteractiveConsoleTester\Tester;
 
 use Synga\InteractiveConsoleTester\Test\FlowTest;
 use Synga\InteractiveConsoleTester\Test\OutputHandler;
+use Synga\InteractiveConsoleTester\Type\ProceedType;
 
 /**
  * Class Tester
@@ -54,8 +55,17 @@ class Tester
 
             $process->start();
 
-            $process->onData(function ($process, $chunk) {
-                $this->outputHandler->handle($chunk, $this->currentTest);
+            $localBuffer = [];
+
+            $process->onData(function ($process, $chunk, $buffer) use (&$localBuffer) {
+                $localBuffer[] = $chunk;
+                $output = $this->outputHandler->handle($chunk, $this->currentTest, $buffer, $localBuffer);
+
+                if ($output instanceof ProceedType) {
+                    $this->currentTest->setBuffer($localBuffer);
+
+                    $localBuffer = [];
+                }
             });
 
             return true;

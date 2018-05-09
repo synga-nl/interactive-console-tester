@@ -8,7 +8,7 @@ class TesterTest extends \PHPUnit\Framework\TestCase
     /** @var \PHPUnit\Framework\MockObject\MockObject */
     protected $outputHandlerMock;
 
-    /** @var \Synga\InteractiveConsoleTester\Tester */
+    /** @var \Synga\InteractiveConsoleTester\Tester\Tester */
     protected $tester;
 
     /** @var array */
@@ -21,7 +21,7 @@ class TesterTest extends \PHPUnit\Framework\TestCase
     {
         $this->outputHandlerMock = $this->createMock(\Synga\InteractiveConsoleTester\Test\OutputHandler::class);
 
-        $this->tester = new \Synga\InteractiveConsoleTester\Tester($this->outputHandlerMock);
+        $this->tester = new \Synga\InteractiveConsoleTester\Tester\Tester($this->outputHandlerMock);
     }
 
     /**

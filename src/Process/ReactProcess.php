@@ -57,8 +57,11 @@ class ReactProcess implements Process
      * @param $command
      * @param string $processClass
      */
-    public function __construct(LoopInterface $loop, string $command, $processClass = \React\ChildProcess\Process::class)
-    {
+    public function __construct(
+        LoopInterface $loop,
+        string $command,
+        $processClass = \React\ChildProcess\Process::class
+    ) {
         $this->loop = $loop;
         $this->command = $command;
         $this->processClass = $processClass;
@@ -82,9 +85,10 @@ class ReactProcess implements Process
         });
 
         $this->process->stdout->on('data', function ($chunk) {
+            var_dump($chunk);
             $lines = array_filter(explode("\n", $chunk));
 
-            $this->buffer[] = array_merge($this->buffer, $lines);
+            $this->buffer = array_merge($this->buffer, $lines);
 
             foreach ($lines as $line) {
                 $this->handleEvent('data', $line, $this->buffer);
@@ -209,5 +213,21 @@ class ReactProcess implements Process
     public function getBuffer(): array
     {
         return $this->buffer;
+    }
+
+    /**
+     * @return LoopInterface
+     */
+    public function getLoop(): LoopInterface
+    {
+        return $this->loop;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCommand(): string
+    {
+        return $this->command;
     }
 }

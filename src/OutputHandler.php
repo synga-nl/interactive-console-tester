@@ -2,7 +2,7 @@
 
 namespace Synga\InteractiveConsoleTester\Test;
 
-use Synga\InteractiveConsoleTester\FlowTest;
+use Synga\InteractiveConsoleTester\Type\ProceedType;
 
 /**
  * Class OutputHandler
@@ -13,11 +13,17 @@ class OutputHandler
     /** @var callable */
     protected $promise;
 
+    /** @var array callable */
+    protected static $cleanUp = [];
+
     /**
      * @param $chunk
      * @param FlowTest $flowTest
+     * @param $buffer
+     * @param $localBuffer
+     * @return null|ProceedType
      */
-    public function handle($chunk, FlowTest $flowTest): void
+    public function handle($chunk, FlowTest $flowTest, $buffer, $localBuffer): ?ProceedType
     {
         if (' > ' === $chunk) {
             $this->executePromise();
@@ -27,22 +33,30 @@ class OutputHandler
             if (!is_null($value)) {
                 $input = $value;
                 if ($input instanceof InputTest) {
-                    $input->testBefore();
+                    $input->testBefore($flowTest, $buffer, $localBuffer);
                     $input = $input->getInput();
 
-                    $this->promise = function () use ($value) {
-                        $value->testAfter();
-                        $value->cleanUp();
+                    $this->promise = function () use ($value, $flowTest, $buffer, $localBuffer) {
+                        $value->testAfter($flowTest, $buffer, $localBuffer);
+                    };
+
+                    static::$cleanUp[] = function () use ($value, $flowTest, $buffer, $localBuffer) {
+                        $value->cleanUp($flowTest, $buffer, $localBuffer);
                     };
                 }
 
                 $flowTest->getProcess()->write($input . "\n");
+
+                return new ProceedType();
             }
         }
+
+        return null;
     }
 
     /**
      * Executes a promise saved in $this->>promise
+     * @return mixed
      */
     public function executePromise()
     {
@@ -55,8 +69,19 @@ class OutputHandler
         return false;
     }
 
+    /**
+     * @return mixed
+     */
     public function exit()
     {
         return $this->executePromise();
+    }
+
+    /**
+     *
+     */
+    public static function executeCleanUp()
+    {
+
     }
 }

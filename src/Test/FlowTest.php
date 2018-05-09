@@ -1,9 +1,10 @@
 <?php
 
-namespace Synga\InteractiveConsoleTester;
+namespace Synga\InteractiveConsoleTester\Test;
 
 use Synga\InteractiveConsoleTester\Process\Process;
-use Synga\InteractiveConsoleTester\Test\InputTest;
+use React\EventLoop\Factory;
+use Synga\InteractiveConsoleTester\Process\ReactProcess;
 
 /**
  * Class FlowTester
@@ -11,20 +12,17 @@ use Synga\InteractiveConsoleTester\Test\InputTest;
  */
 class FlowTest
 {
-    /**
-     * @var Process
-     */
+    /** @var Process */
     private $process;
 
-    /**
-     * @var string|InputTest[]
-     */
+    /** @var string|InputTest[] */
     protected $tests = [];
 
-    /**
-     * @var \Generator
-     */
+    /** @var \Generator */
     protected $generator;
+
+    /** @var array */
+    protected $buffer = [];
 
     /**
      * FlowTest constructor.
@@ -44,6 +42,28 @@ class FlowTest
     }
 
     /**
+     * @param string $command
+     */
+    public static function run(string $command, array $inputTests = [])
+    {
+        $reactProcess = new ReactProcess(Factory::create(), $command);
+
+        $tester = \Synga\InteractiveConsoleTester\Tester\Factory::create();
+
+        $flowTest = static::create($reactProcess);
+
+        foreach ($inputTests as $inputTest) {
+            $flowTest->addInputTest($inputTest);
+        }
+
+        $tester->addTest($flowTest);
+
+        $tester->start();
+
+        $reactProcess->getLoop()->run();
+    }
+
+    /**
      * @param string|InputTest $inputTest
      * @return $this
      */
@@ -59,7 +79,7 @@ class FlowTest
      */
     protected function getGenerator()
     {
-        foreach ($this->tests as $test) {
+        foreach ($this->getTests() as $test) {
             yield $test;
         }
 
@@ -86,10 +106,34 @@ class FlowTest
     }
 
     /**
+     * @return string|InputTest[]
+     */
+    protected function getTests()
+    {
+        return $this->tests;
+    }
+
+    /**
      * @return Process
      */
     public function getProcess(): Process
     {
         return $this->process;
+    }
+
+    /**
+     * @return array
+     */
+    public function getBuffer(): array
+    {
+        return $this->buffer;
+    }
+
+    /**
+     * @param array $buffer
+     */
+    public function setBuffer(array $buffer): void
+    {
+        $this->buffer[] = $buffer;
     }
 }
